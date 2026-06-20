@@ -44,6 +44,9 @@ dev = [
     "pytest>=7.0",
     "tiktoken>=0.5",
 ]
+benchmark = [
+    "tiktoken>=0.5",
+]
 
 [project.urls]
 Homepage = "https://github.com/memahead/memahead"
