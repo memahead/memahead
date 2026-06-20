@@ -8,6 +8,7 @@ import types
 import pytest
 
 from memahead import (
+    BudgetExceededError,
     CompressedContext,
     Plan,
     PlanAwareCompressor,
@@ -164,6 +165,103 @@ def test_invalid_quality_raises():
         PlanAwareCompressor(quality=2.0)
     with pytest.raises(ValueError):
         PlanAwareCompressor(retention_threshold=5.0)
+    with pytest.raises(ValueError):
+        PlanAwareCompressor(budget_tokens=0)
+
+
+# -- budget enforcement ----------------------------------------------------
+
+
+@pytest.fixture
+def sample_workflow(plan, history, tools):
+    return {
+        "history": history,
+        "tools": tools,
+        "plan": plan,
+        "current_step": "research",
+    }
+
+
+def test_budget_respected(keyword_embedder, sample_workflow):
+    compressor = PlanAwareCompressor(
+        embedder=keyword_embedder,
+        use_headroom=False,
+        retention_threshold=0.6,
+        tool_threshold=0.55,
+        budget_tokens=500,
+    )
+    result = compressor.compress(**sample_workflow)
+    assert result.report.after <= 500
+    assert result.report.budget_tokens == 500
+    assert result.report.budget_utilization is not None
+    assert result.report.budget_utilization <= 1.0
+
+
+def test_budget_none_unchanged_behavior(keyword_embedder, sample_workflow):
+    common = dict(
+        embedder=keyword_embedder,
+        use_headroom=False,
+        retention_threshold=0.6,
+        tool_threshold=0.55,
+    )
+    result_no_budget = PlanAwareCompressor(budget_tokens=None, **common).compress(
+        **sample_workflow
+    )
+    result_legacy = PlanAwareCompressor(**common).compress(**sample_workflow)
+    assert result_no_budget.report.after == result_legacy.report.after
+
+
+def test_budget_drops_lowest_scores_first(keyword_embedder, sample_workflow):
+    compressor = PlanAwareCompressor(
+        embedder=keyword_embedder,
+        use_headroom=False,
+        quality=0.5,
+        tool_threshold=0.55,
+        budget_tokens=300,
+    )
+    result = compressor.compress(**sample_workflow)
+    assert result.report.chunks_dropped_for_budget >= 0
+
+
+def test_budget_never_drops_system_messages(keyword_embedder, sample_workflow):
+    compressor = PlanAwareCompressor(
+        embedder=keyword_embedder,
+        use_headroom=False,
+        quality=0.3,
+        tool_threshold=0.55,
+        budget_tokens=200,
+    )
+    result = compressor.compress(**sample_workflow)
+    system_messages = [m for m in result.messages if m.get("role") == "system"]
+    assert len(system_messages) > 0
+
+
+def test_budget_exceeded_error(keyword_embedder, sample_workflow):
+    compressor = PlanAwareCompressor(
+        embedder=keyword_embedder,
+        use_headroom=False,
+        quality=0.99,
+        tool_threshold=0.55,
+        budget_tokens=10,
+    )
+    with pytest.raises(BudgetExceededError) as exc_info:
+        compressor.compress(**sample_workflow)
+    assert exc_info.value.requested_budget == 10
+    assert exc_info.value.minimum_achievable > 10
+
+
+def test_token_report_budget_fields(keyword_embedder, sample_workflow):
+    compressor = PlanAwareCompressor(
+        embedder=keyword_embedder,
+        use_headroom=False,
+        retention_threshold=0.6,
+        tool_threshold=0.55,
+        budget_tokens=1000,
+    )
+    result = compressor.compress(**sample_workflow)
+    assert result.report.budget_tokens == 1000
+    assert result.report.budget_utilization is not None
+    assert 0.0 <= result.report.budget_utilization <= 1.0
 
 
 # -- headroom integration --------------------------------------------------

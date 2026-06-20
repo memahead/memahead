@@ -128,11 +128,17 @@ class TokenReport:
         before: Total tokens before compression (messages + tools).
         after: Total tokens after compression (messages + tools).
         dropped: Per-chunk records of what was removed or shrunk.
+        budget_tokens: Hard token ceiling requested, if any.
+        budget_utilization: ``after / budget_tokens`` when a budget was set.
+        chunks_dropped_for_budget: Message chunks dropped only to meet the budget.
     """
 
     before: int
     after: int
     dropped: List[DroppedChunk] = field(default_factory=list)
+    budget_tokens: Optional[int] = None
+    budget_utilization: Optional[float] = None
+    chunks_dropped_for_budget: int = 0
 
     @property
     def saved(self) -> int:
@@ -157,10 +163,18 @@ class TokenReport:
         return [d.source for d in self.dropped if d.tokens_after == 0]
 
     def __repr__(self) -> str:
-        return (
+        base = (
             f"TokenReport(before={self.before}, after={self.after}, "
-            f"saved={self.saved}, compression_ratio={self.compression_ratio})"
+            f"saved={self.saved}, compression_ratio={self.compression_ratio}"
         )
+        if self.budget_tokens is not None:
+            utilization = self.budget_utilization if self.budget_utilization is not None else 0.0
+            base += (
+                f", budget={self.budget_tokens}, "
+                f"utilization={utilization:.1%}, "
+                f"dropped_for_budget={self.chunks_dropped_for_budget}"
+            )
+        return base + ")"
 
 
 @dataclass

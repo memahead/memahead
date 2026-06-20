@@ -36,7 +36,7 @@ Quick start::
 
 from __future__ import annotations
 
-from .compressor import PlanAwareCompressor
+from .compressor import BudgetExceededError, PlanAwareCompressor
 from .context import (
     CompressedContext,
     DroppedChunk,
@@ -47,7 +47,7 @@ from .plan import Plan, PlanGraph, Step
 from .scorer import ChunkScore, RetentionScorer
 from .tool_filter import ToolFilter, ToolMatch, filter_tools
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "__version__",
@@ -64,6 +64,7 @@ __all__ = [
     "filter_tools",
     # compression pipeline
     "PlanAwareCompressor",
+    "BudgetExceededError",
     # result containers
     "CompressedContext",
     "TokenReport",

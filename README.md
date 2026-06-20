@@ -65,6 +65,44 @@ print(compressed.report)
 # TokenReport(before=12400, after=3100, saved=9300, compression_ratio=0.75)
 ```
 
+## Budget-constrained compression
+
+By default memahead compresses based on the `quality` threshold alone.
+For precise cost control — or when you need to respect a hard context
+window limit — set `budget_tokens`:
+
+```python
+from memahead import PlanAwareCompressor, BudgetExceededError
+
+compressor = PlanAwareCompressor(
+    quality=0.85,
+    budget_tokens=2000,  # never exceed 2000 tokens output
+)
+
+compressed = compressor.compress(
+    history=prior_messages,
+    tools=all_tool_schemas,
+    plan=plan,
+    current_step="synthesize",
+)
+
+print(compressed.report)
+# TokenReport(..., budget=2000, utilization=99.4%, dropped_for_budget=3)
+```
+
+When `budget_tokens` is set, memahead enforces the ceiling by dropping
+the lowest-relevance chunks first — always protecting system messages,
+the current turn, and any chunk scoring above your `quality` threshold.
+
+If the budget is impossible to meet while protecting critical context,
+`BudgetExceededError` tells you the minimum achievable token count so
+you can adjust.
+
+> Inspired by [ContextBudget](https://arxiv.org/abs/2604.01664) (2026),
+> which showed that budget-free compression causes two failure modes:
+> over-compression that loses critical evidence, and under-compression
+> that overflows context limits.
+
 ## How it works
 
 For the step about to run, memahead:
