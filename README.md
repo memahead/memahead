@@ -1,6 +1,15 @@
 # memahead
 
-**Agent memory optimized for what's ahead.**
+**Agent memory, optimized for what's ahead.**
+
+Compress what your agent remembers based on where it's going —
+not just where it's been.
+
+![memahead architecture](docs/architecture.png)
+
+[![PyPI version](https://badge.fury.io/py/memahead.svg)](https://pypi.org/project/memahead/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/memahead/memahead/blob/main/LICENSE)
+[![Tests](https://github.com/memahead/memahead/actions/workflows/ci.yml/badge.svg)](https://github.com/memahead/memahead/actions)
 
 memahead compresses an LLM agent's context at *each step* of a multi-step
 workflow using forward-looking, plan-aware retention. Unlike tools that
