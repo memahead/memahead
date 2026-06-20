@@ -7,6 +7,22 @@ not just where it's been.
 
 ![memahead architecture](docs/architecture.png)
 
+## Results
+
+Real numbers from the benchmark suite — run them yourself:
+
+| Workflow | Before | After | Saved |
+|----------|--------|-------|-------|
+| Research & Synthesis | 6,240 tokens | 4,795 tokens | 23% |
+| Code Review | 5,386 tokens | 2,113 tokens | 61% |
+| Data Analysis | 4,821 tokens | 494 tokens | **90%** |
+
+100% critical fact retention across all workflows.  
+Plan-aware compression outperforms Headroom-only by up to **87%** on data-heavy workflows.
+
+→ [Full benchmark methodology and comparison](benchmarks/results/README.md)  
+→ Reproduce: `python -m benchmarks.run_benchmark`
+
 [![PyPI version](https://badge.fury.io/py/memahead.svg)](https://pypi.org/project/memahead/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/memahead/memahead/blob/main/LICENSE)
 [![Tests](https://github.com/memahead/memahead/actions/workflows/ci.yml/badge.svg)](https://github.com/memahead/memahead/actions)
