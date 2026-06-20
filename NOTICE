@@ -1,0 +1,49 @@
+memahead
+Copyright 2026 memahead contributors
+
+This product includes software developed by the memahead contributors,
+licensed under the Apache License, Version 2.0.
+
+------------------------------------------------------------------------
+Academic foundations
+------------------------------------------------------------------------
+
+memahead productizes findings from the following research. memahead is an
+independent implementation and is not affiliated with, endorsed by, or
+released by the authors of these works. All credit for the underlying
+ideas belongs to the respective authors.
+
+1. PAACE: Plan-Aware Agent Context Engineering
+   Yuksel et al., December 2025
+   arXiv:2512.16970
+   https://arxiv.org/abs/2512.16970
+
+   memahead's forward-looking retention scoring — scoring each context
+   chunk against the *remaining* steps of a plan rather than greedily
+   against past history — is inspired by the plan-aware compression
+   approach described in this paper.
+
+2. ACON: Agent Context Optimization
+   Kang et al., Microsoft, 2025
+   arXiv:2510.00615
+   https://arxiv.org/abs/2510.00615
+
+   memahead's chunk-level retention and tool-schema filtering draw on
+   the context optimization techniques described in this paper.
+
+------------------------------------------------------------------------
+Third-party dependencies
+------------------------------------------------------------------------
+
+memahead builds on top of, and gives full credit to:
+
+- Headroom (headroom-ai), Apache-2.0
+  https://pypi.org/project/headroom-ai/
+  Headroom performs the underlying compression mechanics. memahead adds
+  a plan-aware retention scoring layer on top of it.
+
+- sentence-transformers, Apache-2.0
+  https://www.sbert.net/
+
+- NumPy, BSD-3-Clause
+  https://numpy.org/

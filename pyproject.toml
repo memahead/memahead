@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "memahead"
+version = "0.1.0"
+description = "Agent memory optimized for what's ahead: plan-aware, forward-looking context compression for LLM agents."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "memahead contributors" }]
+keywords = [
+    "llm",
+    "agent",
+    "context",
+    "compression",
+    "memory",
+    "tokens",
+    "plan",
+    "retention",
+    "headroom",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy>=1.23",
+    "sentence-transformers>=2.2",
+    "headroom-ai>=0.5",
+]
+
+[project.optional-dependencies]
+# Accurate token accounting (falls back to a heuristic when absent).
+tokenizers = ["tiktoken>=0.5"]
+dev = [
+    "pytest>=7.0",
+    "tiktoken>=0.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/memahead/memahead"
+Repository = "https://github.com/memahead/memahead"
+Issues = "https://github.com/memahead/memahead/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["memahead"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
