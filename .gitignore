@@ -68,3 +68,6 @@ dmypy.json
 .cache/
 *.pt
 *.bin
+
+# Strategic / internal docs — never commit
+VISION.md
