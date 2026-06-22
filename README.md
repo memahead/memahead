@@ -119,6 +119,32 @@ you can adjust.
 > over-compression that loses critical evidence, and under-compression
 > that overflows context limits.
 
+## LangGraph integration
+
+```bash
+pip install memahead[langgraph]
+```
+
+memahead reads your workflow structure directly from the `StateGraph` —
+no manual `Plan` declaration. Node docstrings become step descriptions.
+
+```python
+from memahead.integrations.langgraph import compress_node, compress_graph
+
+# wrap one node
+builder.add_node("synthesize", compress_node(synthesize, builder))
+
+# or wrap the whole graph
+builder = compress_graph(builder, exclude={"research"})
+```
+
+Step descriptions are resolved in this order: explicit `step_descriptions`
+mapping → node docstring → node name.
+
+> Cyclic graphs can't be linearly ordered, so plan-aware retention falls
+> back to treating all non-current nodes as remaining. memahead warns when
+> this happens.
+
 ## How it works
 
 For the step about to run, memahead:

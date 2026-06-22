@@ -47,7 +47,7 @@ from .plan import Plan, PlanGraph, Step
 from .scorer import ChunkScore, RetentionScorer
 from .tool_filter import ToolFilter, ToolMatch, filter_tools
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "__version__",

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "memahead"
-version = "0.2.0"
+version = "0.3.0"
 description = "Agent memory optimized for what's ahead: plan-aware, forward-looking context compression for LLM agents."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -40,9 +40,11 @@ dependencies = [
 [project.optional-dependencies]
 # Accurate token accounting (falls back to a heuristic when absent).
 tokenizers = ["tiktoken>=0.5"]
+langgraph = ["langgraph>=0.3"]
 dev = [
     "pytest>=7.0",
     "tiktoken>=0.5",
+    "langgraph>=0.3",
 ]
 benchmark = [
     "tiktoken>=0.5",

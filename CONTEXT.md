@@ -34,7 +34,7 @@ memahead sits ABOVE Headroom. Headroom handles compression mechanics.
 memahead decides what to compress aggressively vs preserve, based on 
 the plan. They are complementary, not competing.
 
-Headroom repo: https://github.com/chopratejas/headroom
+Headroom repo: https://github.com/headroomlabs-ai/headroom
 Headroom does NOT know about plans, remaining steps, or future needs.
 
 ## Academic foundation
